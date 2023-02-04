@@ -1,0 +1,5 @@
+package spending
+
+func NewSpending() {
+
+}
