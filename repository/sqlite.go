@@ -1,12 +1,18 @@
 package repository
 
 import (
+	"errors"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type sqliteRepository struct {
 	db *gorm.DB
+}
+
+type sqliteRepo interface {
+	PrimaryKey() string
 }
 
 func NewSQLite(filename string) (repo *sqliteRepository, err error) {
@@ -31,6 +37,12 @@ func (s *sqliteRepository) Save(id string, tableName string, data any) (err erro
 }
 
 func (s *sqliteRepository) Get(id string, tableName string, data any) (err error) {
-	err = s.db.Table(tableName).First(data, "data_id = ?", id).Error
+	sqliteData, ok := data.(sqliteRepo)
+	if !ok {
+		err = errors.New("data must be implement PrimaryKey()")
+		return
+	}
+
+	err = s.db.Table(tableName).First(data, sqliteData.PrimaryKey()+"=?", id).Error
 	return
 }
