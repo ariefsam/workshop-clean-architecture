@@ -20,12 +20,17 @@ func NewSQLite(filename string) (repo *sqliteRepository, err error) {
 	return
 }
 
-func (s *sqliteRepository) Save(id string, tableName string, data any) (err error) {
+func (s *sqliteRepository) AutoMigrate(data any) (err error) {
+	err = s.db.AutoMigrate(data)
+	return
+}
 
+func (s *sqliteRepository) Save(id string, tableName string, data any) (err error) {
+	err = s.db.Table(tableName).Create(data).Error
 	return
 }
 
 func (s *sqliteRepository) Get(id string, tableName string, data any) (err error) {
-
+	err = s.db.Table(tableName).First(data, "data_id = ?", id).Error
 	return
 }

@@ -1,6 +1,7 @@
 package spending
 
 import (
+	"encoding/json"
 	"errors"
 	"expense-tracker/service/activity"
 	"time"
@@ -47,10 +48,12 @@ func (s *spending) Create(id, name string, amount float64) (err error) {
 		return
 	}
 
+	dataSpending, _ := json.Marshal(spending)
+
 	activityData := activity.Activity{
 		ActivityID: idgenerator.Generate(),
 		Name:       "Create Spending",
-		Data:       "spending",
+		Data:       string(dataSpending),
 		Time:       time.Now(),
 	}
 	err = s.repo.Save(activityData.ActivityID, "activity", activityData)
