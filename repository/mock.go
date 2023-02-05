@@ -1,5 +1,7 @@
 package repository
 
+import "log"
+
 type mockRepository struct {
 	saved map[string]any
 }
@@ -14,6 +16,7 @@ func (m *mockRepository) Save(id string, tableName string, data any) (err error)
 		m.saved = map[string]any{}
 	}
 	m.saved[tableName] = data
+	log.Println("data saved table: ", tableName, "id:", id)
 	return
 }
 

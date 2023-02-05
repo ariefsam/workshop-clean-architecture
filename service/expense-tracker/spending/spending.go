@@ -33,7 +33,7 @@ func NewSpending(repo repository) (s *spending) {
 
 func (s *spending) Create(id, name string, amount float64) (err error) {
 
-	if amount < 0 {
+	if amount <= 0 {
 		err = errors.New("amount must be greater than 0")
 		return
 	}
